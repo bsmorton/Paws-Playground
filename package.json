@@ -1,0 +1,25 @@
+{
+  "name": "pawsplayground",
+  "version": "1.0.0",
+  "description": "A dogpark review site for dogs and dog owners",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bsmorton/Paws-Playground.git"
+  },
+  "author": "Bradley Morton",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/bsmorton/Paws-Playground/issues"
+  },
+  "homepage": "https://github.com/bsmorton/Paws-Playground#readme",
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "ejs": "^2.6.2",
+    "express": "^4.17.1",
+    "node": "^12.6.0"
+  }
+}
