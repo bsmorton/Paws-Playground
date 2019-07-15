@@ -1,7 +1,16 @@
 <h1><%= dogpark.name %></h1>
 
+<h4><%= dogpark.address %></h4>
+
 <img src="<%= dogpark.image %>" width=500px height=300px>
 
 <p><%= dogpark.description %></p>
+
+<% dogpark.comments.forEach(function(comment){ %>
+    <p>
+        <%= console.log("author "+comment.author) %>
+        <strong><%= comment.author %></strong> - <%= comment.text %>
+    </p>
+<% }); %>
 
 <a href="/dogparks">Go Back</a>
