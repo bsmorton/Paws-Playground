@@ -3,30 +3,35 @@ var express     = require("express"),
     bodyParser  = require("body-parser"),
     mongoose    = require("mongoose"),
     Dogpark     = require("./models/dogpark"),
+    Comment     = require("./models/comment"),
     seedDB      = require("./seeds");
     
 
 mongoose.connect("mongodb://localhost:27017/paws_playground",{ useNewUrlParser: true });
 app.use(bodyParser.urlencoded({extended: true}));
 app.set("view engine", "ejs");
-seedDB();
+// seedDB();
 
 app.get("/", function(req, res){
     res.render("home");
 });
+
+// ===================
+// DOGPARK ROUTES
+// ===================
 
 app.get("/dogparks", function(req, res){
     Dogpark.find({}, function(err, dogparks){
         if(err){
             console.log(err);
         } else{
-            res.render("dogparks", {dogparks: dogparks});
+            res.render("dogparks/dogparks", {dogparks: dogparks});
         }
     });
 });
 
 app.get("/dogparks/new", function(req, res) {
-    res.render("new");
+    res.render("dogparks/new");
 });
 
 app.get("/dogparks/:id", function(req, res){
@@ -34,7 +39,7 @@ app.get("/dogparks/:id", function(req, res){
         if(err){
             console.log(err);
         } else {
-            res.render("show", {dogpark: foundDogpark});
+            res.render("dogparks/show", {dogpark: foundDogpark});
         }
     });
 });
@@ -54,6 +59,40 @@ app.post("/dogparks", function(req, res){
        }
    });
    
+});
+
+
+// ===================
+// COMMENTS ROUTES
+// ===================
+
+app.get("/dogparks/:id/comment/new", function(req, res){
+    Dogpark.findById(req.params.id, function(err, dogpark){
+        if(err){
+            console.log(err);
+        } else {
+            res.render("comments/new", {dogpark: dogpark});
+        }
+    });
+});
+
+app.post("/dogparks/:id/comment", function(req, res){
+    Dogpark.findById(req.params.id, function(err, dogpark){
+        if(err){
+            console.log(err);
+            res.redirect("/dogpark");
+        } else {
+            Comment.create(req.body.comment, function(err, comment){
+               if(err){
+                   console.log(err);
+               } else {
+                   dogpark.comments.push(comment);
+                   dogpark.save();
+                   res.redirect("/dogparks/"+dogpark._id);
+               }
+            });
+        }
+    });
 });
 
 app.listen(process.env.PORT, process.env.IP, function(){

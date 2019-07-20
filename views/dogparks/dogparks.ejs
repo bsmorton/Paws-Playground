@@ -1,0 +1,35 @@
+<% include ../partials/header %>
+    <div class="container">
+        <header class="jumbotron">
+            <div class="container">
+                <h1>Welcome To Paw's Playground!</h1>
+                <h4>a dogpark review site</h4>
+                <p>View our dogparks from around the world</p>
+                <p>
+                    <a class="btn btn-primary btn-large" href="/dogparks/new">Add New Dogpark</a>
+                </p>
+            </div>
+        </header>
+        
+        <div class="row text-center" style="display: flex; flex-wrap: wrap;">
+            
+            <% dogparks.forEach(function(dogpark){ %>
+                <div class="col-md-3 col-sm-6">
+                    <div class="card">
+                        <img class="card-img-bottom" src="<%= dogpark.image %>">
+                        <div class="caption">
+                            <h4 class="card-title"><%= dogpark.name %></h4>
+                        </div>
+                        <div class="caption">
+                            <p class="card-text"><%= dogpark.address %></p>
+                        </div>
+                        <p>
+                            <a href="/dogparks/<%= dogpark._id %>" class="btn btn-primary">More Info</a>
+                        </p>
+                    </div>
+                </div>
+            <% }); %>
+        </div>
+    
+    </div>
+<% include ../partials/footer %>
