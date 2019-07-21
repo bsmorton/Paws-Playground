@@ -1,0 +1,20 @@
+body {
+    /*image courtesy of http://thepatternlibrary.com*/
+    background-image: url("cuadros.png");
+}
+
+.navbar-default {
+    background: #0d57a1; 
+}
+
+.card img {
+    width: 100%;
+}
+
+.card {
+    border: none;
+}
+
+.card .card-body {
+    padding: 9px;
+}
