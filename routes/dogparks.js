@@ -32,7 +32,13 @@ router.post("/", isLoggedIn, function(req, res){
         address       = req.body.address,
         image         = req.body.image,
         description   = req.body.description,
-        newDogpark    = {name: name, address: address, image: image, description: description};
+        author        = {
+                                id: req.user._id,
+                                username: req.user.username
+                        },
+        newDogpark    = {name: name, address: address, image: image, description: description, author: author};
+                            
+    
    
     Dogpark.create(newDogpark, function(err, newlyCreated){
        if(err){
