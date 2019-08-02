@@ -1,10 +1,11 @@
 var express    = require("express"),
     router     = express.Router({mergeParams: true}),
     Dogpark    = require("../models/dogpark"),
-    Comment    = require("../models/comment");
+    Comment    = require("../models/comment"),
+    middleware = require("../middleware");
     
 
-router.get("/new", isLoggedIn, function(req, res){
+router.get("/new", middleware.isLoggedIn, function(req, res){
     Dogpark.findById(req.params.id, function(err, dogpark){
         if(err){
             console.log(err);
@@ -14,7 +15,7 @@ router.get("/new", isLoggedIn, function(req, res){
     });
 });
 
-router.post("/", isLoggedIn, function(req, res){
+router.post("/", middleware.isLoggedIn, function(req, res){
     Dogpark.findById(req.params.id, function(err, dogpark){
         if(err){
             console.log(err);
@@ -37,11 +38,37 @@ router.post("/", isLoggedIn, function(req, res){
     });
 });
 
-function isLoggedIn(req, res, next){
-    if(req.isAuthenticated()){
-        return next();
-    }
-    res.redirect("/login");
-}
+router.get("/:comment_id/edit", middleware.checkCommentOwnership, function(req, res){
+    Comment.findById(req.params.comment_id, function(err, foundComment){
+        if(err){
+            res.redirect("back");
+        } else {
+             res.render("comments/edit", {dogpark_id: req.params.id, comment: foundComment});
+        }
+    });
+});
+
+
+router.put("/:comment_id", function(req, res){
+    Comment.findByIdAndUpdate(req.params.comment_id, req.body.comment, function(err, updatedComment){
+        if(err){
+            res.redirect("back");
+        } else {
+            res.redirect("/dogparks/" + req.params.id);
+        }
+    });
+});
+
+
+router.delete("/:comment_id", function(req, res){
+    Comment.findByIdAndRemove(req.params.comment_id, function(err){
+        if(err){
+            res.redirect("/back");
+        } else {
+            res.redirect("/dogparks/" + req.params.id);
+        }
+    });
+});
+
 
 module.exports = router;

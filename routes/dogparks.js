@@ -1,6 +1,7 @@
 var express    = require("express"),
     router     = express.Router(),
-    Dogpark    = require("../models/dogpark");
+    Dogpark    = require("../models/dogpark"),
+    middleware = require("../middleware");
 
 
 router.get("/", function(req, res){
@@ -13,7 +14,7 @@ router.get("/", function(req, res){
     });
 });
 
-router.get("/new", isLoggedIn, function(req, res) {
+router.get("/new", middleware.isLoggedIn, function(req, res) {
     res.render("dogparks/new");
 });
 
@@ -27,7 +28,23 @@ router.get("/:id", function(req, res){
     });
 });
 
-router.post("/", isLoggedIn, function(req, res){
+router.get("/:id/edit", middleware.checkDogparkOwnership, function(req, res) {
+    Dogpark.findById(req.params.id, function(err, foundDogpark){
+        res.render("dogparks/edit", {dogpark: foundDogpark});   
+    });
+});
+
+router.put("/:id", middleware.checkDogparkOwnership, function(req, res){
+    Dogpark.findByIdAndUpdate(req.params.id, req.body.dogpark, function(err, updatedDogpark){
+        if(err){
+            res.redirect("/dogparks");
+        } else {
+            res.redirect("/dogparks/" + req.params.id);
+        }
+    });
+});
+
+router.post("/", middleware.isLoggedIn, function(req, res){
     var name          = req.body.name,
         address       = req.body.address,
         image         = req.body.image,
@@ -50,11 +67,16 @@ router.post("/", isLoggedIn, function(req, res){
    
 });
 
-function isLoggedIn(req, res, next){
-    if(req.isAuthenticated()){
-        return next();
-    }
-    res.redirect("/login");
-}
+router.delete("/:id", middleware.checkDogparkOwnership, function(req, res){
+    Dogpark.findByIdAndRemove(req.params.id, function(err){
+        if(err){
+            res.redirect("/dogparks");
+        } else {
+            res.redirect("/dogparks");
+        }
+    });
+});
+
+
 
 module.exports = router;

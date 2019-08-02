@@ -1,22 +1,23 @@
-var express       = require("express"),
-    app           = express(),
-    bodyParser    = require("body-parser"),
-    mongoose      = require("mongoose"),
-    passport      = require("passport"),
-    LocalStrategy = require("passport-local"),
-    Dogpark       = require("./models/dogpark"),
-    Comment       = require("./models/comment"),
-    User          = require("./models/user"),
-    seedDB        = require("./seeds"),
-    commentRoutes = require("./routes/comments"),
-    dogparkRoutes = require("./routes/dogparks"),
-    authRoutes    = require("./routes/auth");  
+var express        = require("express"),
+    app            = express(),
+    bodyParser     = require("body-parser"),
+    mongoose       = require("mongoose"),
+    passport       = require("passport"),
+    LocalStrategy  = require("passport-local"),
+    methodOverride = require("method-override"),
+    Dogpark        = require("./models/dogpark"),
+    Comment        = require("./models/comment"),
+    User           = require("./models/user"),
+    seedDB         = require("./seeds"),
+    commentRoutes  = require("./routes/comments"),
+    dogparkRoutes  = require("./routes/dogparks"),
+    authRoutes     = require("./routes/auth");  
 
 mongoose.connect("mongodb://localhost:27017/paws_playground",{ useNewUrlParser: true });
 app.use(bodyParser.urlencoded({extended: true}));
 app.set("view engine", "ejs");
 app.use(express.static(__dirname + "/public"));
-// seedDB();
+app.use(methodOverride("_method"));
 
 
 // Passport Configuration
