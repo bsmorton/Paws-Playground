@@ -23,6 +23,7 @@ router.post("/", middleware.isLoggedIn, function(req, res){
         } else {
             Comment.create(req.body.comment, function(err, comment){
                if(err){
+                   req.flash("error", "Something went wrong");
                    console.log(err);
                } else {
                    comment.author.id = req.user._id;
@@ -31,6 +32,7 @@ router.post("/", middleware.isLoggedIn, function(req, res){
                    dogpark.comments.push(comment);
                    dogpark.save();
                    console.log(comment);
+                   req.flash("success", "Successfully added comment");
                    res.redirect("/dogparks/"+dogpark._id);
                }
             });
@@ -41,6 +43,7 @@ router.post("/", middleware.isLoggedIn, function(req, res){
 router.get("/:comment_id/edit", middleware.checkCommentOwnership, function(req, res){
     Comment.findById(req.params.comment_id, function(err, foundComment){
         if(err){
+            req.flash("error", "Dogpark not found");
             res.redirect("back");
         } else {
              res.render("comments/edit", {dogpark_id: req.params.id, comment: foundComment});
@@ -52,8 +55,10 @@ router.get("/:comment_id/edit", middleware.checkCommentOwnership, function(req, 
 router.put("/:comment_id", function(req, res){
     Comment.findByIdAndUpdate(req.params.comment_id, req.body.comment, function(err, updatedComment){
         if(err){
+            req.flash("error", "Something went wrong");
             res.redirect("back");
         } else {
+            req.flash("success", "Comment updated");
             res.redirect("/dogparks/" + req.params.id);
         }
     });
@@ -63,8 +68,10 @@ router.put("/:comment_id", function(req, res){
 router.delete("/:comment_id", function(req, res){
     Comment.findByIdAndRemove(req.params.comment_id, function(err){
         if(err){
+            req.flash("error", "Something went wrong");
             res.redirect("/back");
         } else {
+            req.flash("success", "Comment deleted");
             res.redirect("/dogparks/" + req.params.id);
         }
     });

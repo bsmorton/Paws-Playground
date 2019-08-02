@@ -6,7 +6,7 @@
                 <h1 class="text-center">Edit Comment</h1>
                 <div style="width: 30%; margin: 25px auto;">
                     
-                    <form action="/index/<%= dogpark_id %>/comment/<%=comment._id%>?_method=PUT" method="POST">
+                    <form action="/dogparks/<%= dogpark_id %>/comment/<%=comment._id%>?_method=PUT" method="POST">
                         <div class="form-group">
                             <input class="form-control" type="text" name="comment[text]" value="<%comment.text%>">
                         </div>

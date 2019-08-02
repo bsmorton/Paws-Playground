@@ -21,6 +21,7 @@ router.get("/new", middleware.isLoggedIn, function(req, res) {
 router.get("/:id", function(req, res){
     Dogpark.findById(req.params.id).populate("comments").exec(function(err, foundDogpark){
         if(err){
+            req.flash("error", "Dogpark not found");
             console.log(err);
         } else {
             res.render("dogparks/show", {dogpark: foundDogpark});
@@ -30,6 +31,7 @@ router.get("/:id", function(req, res){
 
 router.get("/:id/edit", middleware.checkDogparkOwnership, function(req, res) {
     Dogpark.findById(req.params.id, function(err, foundDogpark){
+        req.flash("error", "Dogpark not found");
         res.render("dogparks/edit", {dogpark: foundDogpark});   
     });
 });
@@ -37,8 +39,10 @@ router.get("/:id/edit", middleware.checkDogparkOwnership, function(req, res) {
 router.put("/:id", middleware.checkDogparkOwnership, function(req, res){
     Dogpark.findByIdAndUpdate(req.params.id, req.body.dogpark, function(err, updatedDogpark){
         if(err){
+            req.flash("error", "Something went wrong");
             res.redirect("/dogparks");
         } else {
+            req.flash("success", "Dogpark updated");
             res.redirect("/dogparks/" + req.params.id);
         }
     });
@@ -59,8 +63,10 @@ router.post("/", middleware.isLoggedIn, function(req, res){
    
     Dogpark.create(newDogpark, function(err, newlyCreated){
        if(err){
+           req.flash("error", "Something went wrong");
            console.log(err);
        } else{
+           req.flash("success", "Successfully added Dogpark");
            res.redirect("/dogparks");
        }
    });
@@ -70,8 +76,10 @@ router.post("/", middleware.isLoggedIn, function(req, res){
 router.delete("/:id", middleware.checkDogparkOwnership, function(req, res){
     Dogpark.findByIdAndRemove(req.params.id, function(err){
         if(err){
+            req.flash("error", "Something went wrong");
             res.redirect("/dogparks");
         } else {
+            req.flash("success", "Dogpark deleted");
             res.redirect("/dogparks");
         }
     });
