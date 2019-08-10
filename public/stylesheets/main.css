@@ -1,10 +1,6 @@
-body {
-    /*image courtesy of http://thepatternlibrary.com*/
-    background-image: url("cuadros.png");
-}
-
-.navbar-default {
-    background: #0d57a1; 
+#site-body {
+    background: rgb(2,0,36);
+    background: linear-gradient(90deg, rgba(2,0,36,1) 0%, rgba(217,229,233,1) 0%, rgba(0,212,255,1) 100%); 
 }
 
 .card img {
